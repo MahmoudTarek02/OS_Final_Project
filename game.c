@@ -41,41 +41,24 @@ int check_if_will_be_alive(int i, int j)
     {
         for (int col = start_col; col <= end_col; col++)
         {
+            if ((row == i) && (col == j)) continue;
 
-            if ((row == i) && (col == j))
-            {
-                continue;
-            }
-
-            if (grid[row][col] == ALIVE)
-            {
-                alive_neighbours++;
-            }
+            if (grid[row][col] == ALIVE) alive_neighbours++;                
         }
     }
 
     if (grid[i][j] == DEAD)
     {
-        if (alive_neighbours == 3)
-        { // dead cell with 3 alive neighbours will be alive (birth)
-            return 1;
-        }
-        else
-        {
-            return 0; // dead cell will remain dead
-        }
+        if (alive_neighbours == 3) return 1; // dead cell with 3 alive neighbours will be alive (birth)
+
+        else  return 0; // dead cell will remain dead
     }
 
     if (grid[i][j] == ALIVE)
     {
-        if ((alive_neighbours == 2) || (alive_neighbours == 3))
-        { // alive cell with 2 or 3 alive neighbours will survive
-            return 1;
-        }
-        else
-        {
-            return 0; // isolation or overcrowding (death)
-        }
+        if ((alive_neighbours == 2) || (alive_neighbours == 3))  return 1;  // alive cell with 2 or 3 alive neighbours will survive
+
+        else return 0; // isolation or overcrowding (death)
     }
 
     return 0;
@@ -99,8 +82,10 @@ void *compute_next_gen(void *arg)
     }
     pthread_barrier_wait(&barrier);
 
-    for(int i = start ; i <= end ; i++){
-        for (int j = 0 ; j < GRID_SIZE ; j++){
+    for (int i = start; i <= end; i++)
+    {
+        for (int j = 0; j < GRID_SIZE; j++)
+        {
             grid[i][j] = next_gen[i][j];
         }
     }
@@ -120,6 +105,7 @@ void initialize_grid(int grid[GRID_SIZE][GRID_SIZE])
         }
     }
 }
+
 void initialize_patterns(int grid[GRID_SIZE][GRID_SIZE])
 {
 
@@ -144,18 +130,6 @@ void initialize_patterns(int grid[GRID_SIZE][GRID_SIZE])
     grid[12][11] = 1;
 }
 
-void apply_next_gen()
-{
-    printf("Applying next generation\n");
-    for (int i = 0; i < GRID_SIZE; i++)
-    {
-        for (int j = 0; j < GRID_SIZE; j++)
-        {
-            grid[i][j] = next_gen[i][j];
-        }
-    }
-    printf("Applied next generation\n");
-}
 
 int main()
 {
@@ -195,11 +169,6 @@ int main()
     {
         pthread_join(threads[i], NULL);
     }
-
-    // print_grid();
-    /*
-    write your code here
-    */
 
     pthread_barrier_destroy(&barrier);
     return 0;
